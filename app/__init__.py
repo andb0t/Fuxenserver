@@ -50,23 +50,26 @@ def index():
 # ==============================================================================
 # messages api
 # ==============================================================================
-messages_store = [{'username': 'test', 'message': 'A test message.'}]
-
 
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    return jsonify(messages_store)
+    messages = Message.query.all()
+    return jsonify([m.as_dict() for m in messages])
 
 
 @app.route('/messages', methods=['POST'])
 def post_messages():
-    global messages_store
     if not request.is_json:
         abort(400)
 
     # print(request.get_json())
     json = request.get_json()
 
-    messages_store += [json]
+    if ('username' not in json) or ('message' not in json):
+        abort(400)
+
+    message = Message(username=json['username'], message=json['message'])
+    db.session.add(message)
+    db.session.commit()
 
     return ''
