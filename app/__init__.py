@@ -1,3 +1,4 @@
+import os
 import socket
 from flask import Flask
 from flask import abort
@@ -11,7 +12,7 @@ app = Flask('foxApp')
 # configure frontend for interaction
 # ==============================================================================
 # select the database backend and where to find it
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 # suppress warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # create db connection
