@@ -16,12 +16,12 @@ def index():
 
 
 # messages api
-message_store = [{'username': 'test', 'message': 'A test message.'}]
+messages_store = [{'username': 'test', 'message': 'A test message.'}]
 
 
 @app.route('/messages', methods=['GET'])
 def get_messages():
-    return jsonify(message_store)
+    return jsonify(messages_store)
 
 
 @app.route('/messages', methods=['POST'])
