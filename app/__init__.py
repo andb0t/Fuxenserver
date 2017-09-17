@@ -1,5 +1,5 @@
 import os
-import socket
+# import socket
 from flask import Flask
 from flask import abort
 from flask import jsonify
