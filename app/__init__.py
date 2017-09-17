@@ -43,7 +43,8 @@ class Message(db.Model):
 # ==============================================================================
 @app.route("/")
 def index():
-    return 'Hello from FLASK, my hostname is: %s \n' % (socket.gethostname())
+    return 'Hello from FLASK, my hostname is secret'
+    # return 'Hello from FLASK, my hostname is: %s \n' % (socket.gethostname())
 
 # http://localhost:5000/
 
