@@ -21,7 +21,7 @@ def recreate():
 
 def init():
     print('Populating with test data')
-    message = app.Message(username='testbeep', score='0', message='This is generated when db is created.')
+    message = app.Message(username='testbeep', score='0', message='This is generated when the database is created.')
     app.db.session.add(message)
     app.db.session.commit()
 

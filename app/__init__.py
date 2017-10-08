@@ -1,7 +1,7 @@
 import os
 # import socket
 import flask
-from flask_sqlalchemy import SQLAlchemy
+import flask_sqlalchemy
 
 app = flask.Flask('foxApp')
 
@@ -13,13 +13,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 # suppress warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # create db connection
-db = SQLAlchemy(app)
+db = flask_sqlalchemy.SQLAlchemy(app)
 
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
-    score = db.Column(db.String(80))
+    score = db.Column(db.Integer)
     message = db.Column(db.String(80))
 
     def __init__(self, username, score, message):
