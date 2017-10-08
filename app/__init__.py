@@ -33,9 +33,9 @@ class Message(db.Model):
 
     def as_dict(self):
         return {
-            'username': self.username,
-            'message': self.message
-        }
+                'username': self.username,
+                'message': self.message
+                }
 
 
 # ==============================================================================
