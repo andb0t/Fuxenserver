@@ -14,10 +14,12 @@ def read_messages(addr):
     print()
 
 
-def post_message(addr, username, message):
+def post_message(addr, username, score, message):
     response = requests.post(addr,
-                             json={'message': message,
-                                   'username': username
+                             json={
+                                   'username': username,
+                                   'score': score,
+                                   'message': message,
                                    }
                              )
     # if request fails or throws error
@@ -26,8 +28,11 @@ def post_message(addr, username, message):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--addr', default='http://localhost:5000/messages')
+parser.add_argument('--name', default='andb0t')
+parser.add_argument('--msg', default='Hi, posting message!')
+parser.add_argument('--score', default='0')
 args = parser.parse_args()
 
 read_messages(args.addr)
-post_message(args.addr, 'andb0t', 'Hi, posting message!')
+post_message(args.addr, args.name, args.score, args.msg)
 read_messages(args.addr)

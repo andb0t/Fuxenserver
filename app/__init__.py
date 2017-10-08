@@ -1,12 +1,9 @@
 import os
 # import socket
-from flask import Flask
-from flask import abort
-from flask import jsonify
-from flask import request
+import flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask('foxApp')
+app = flask.Flask('foxApp')
 
 # ==============================================================================
 # configure frontend for interaction
@@ -21,21 +18,25 @@ db = SQLAlchemy(app)
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(80))
     username = db.Column(db.String(80))
+    score = db.Column(db.String(80))
+    message = db.Column(db.String(80))
 
-    def __init__(self, username, message):
+    def __init__(self, username, score, message):
         self.username = username
+        self.score = score
         self.message = message
 
     def __repr__(self):
-        return 'Message {}: {} - "{}">'.format(self.id, self.username, self.message)
+        return 'Message {}: {} - "{}">'.format(self.id, self.username, self.score)
 
     def as_dict(self):
-        return {
-                'username': self.username,
-                'message': self.message
-                }
+        asDict = {
+                  'username': self.username,
+                  'score': self.score,
+                  'message': self.message,
+                  }
+        return asDict
 
 
 # ==============================================================================
@@ -56,21 +57,23 @@ def index():
 @app.route('/messages', methods=['GET'])
 def get_messages():
     messages = Message.query.all()
-    return jsonify([m.as_dict() for m in messages])
+    return flask.jsonify([m.as_dict() for m in messages])
 
 
 @app.route('/messages', methods=['POST'])
 def post_messages():
-    if not request.is_json:
-        abort(400)
+    if not flask.request.is_json:
+        flask.abort(400)
 
     # print(request.get_json())
-    json = request.get_json()
+    json = flask.request.get_json()
 
-    if ('username' not in json) or ('message' not in json):
-        abort(400)
+    if ('username' not in json) or ('score' not in json) or ('message' not in json):
+        flask.abort(400)
 
-    message = Message(username=json['username'], message=json['message'])
+    message = Message(username=json['username'],
+                      score=json['score'],
+                      message=json['message'])
     db.session.add(message)
     db.session.commit()
 
