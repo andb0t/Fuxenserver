@@ -1,5 +1,6 @@
 import datetime
 import os
+
 import flask
 import flask_sqlalchemy
 
@@ -77,7 +78,7 @@ def post_messages():
     message = Message(username=json['username'],
                       score=json['score'],
                       message=json['message'],
-                      time=str(now.strftime("%Y-%m-%d %H:%M"))
+                      time=now.strftime("%Y-%m-%d %H:%M:%S")
                       )
 
     # # db vetos
