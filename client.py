@@ -28,7 +28,7 @@ def post_message(addr, username, score, message):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--addr', default='http://localhost:5000/messages')
-parser.add_argument('--name', default='andb0t')
+parser.add_argument('--name', default='')
 parser.add_argument('--msg', default='')
 parser.add_argument('--score', default=0, type=int)
 args = parser.parse_args()
