@@ -1,5 +1,4 @@
 import os
-# import socket
 import flask
 import flask_sqlalchemy
 
@@ -28,15 +27,14 @@ class Message(db.Model):
         self.message = message
 
     def __repr__(self):
-        return 'Message {}: {} - "{}">'.format(self.id, self.username, self.score)
+        return '<User %r>' % self.username
 
     def as_dict(self):
-        asDict = {
-                  'username': self.username,
-                  'score': self.score,
-                  'message': self.message,
-                  }
-        return asDict
+        return {
+                'username': self.username,
+                'score': self.score,
+                'message': self.message,
+                }
 
 
 # ==============================================================================
@@ -65,7 +63,7 @@ def post_messages():
     if not flask.request.is_json:
         flask.abort(400)
 
-    # print(request.get_json())
+    # print(flask.request.get_json())
     json = flask.request.get_json()
 
     if ('username' not in json) or ('score' not in json) or ('message' not in json):
@@ -74,6 +72,26 @@ def post_messages():
     message = Message(username=json['username'],
                       score=json['score'],
                       message=json['message'])
+
+    # # db vetos
+    messages = Message.query.all()
+    scores = [m.score for m in messages]
+    usernames = [m.username for m in messages]
+    highScoreTuple = list(zip(scores, usernames))
+    # veto same entry twice
+    if (message.score, message.username) in highScoreTuple:
+        print('Score', message.score, 'and username', message.username, 'alread present. Abort db submission!')
+        return ''
+    # veto entry of lower results
+    userScores = [highScore[0] for highScore in highScoreTuple if highScore[1] == message.username]
+    if userScores:
+        highScore = max(userScores)
+    else:
+        highScore = 0
+    if message.score < highScore:
+        print('Score', str(message.score), ' less than existing highscore', str(highScore) + '. Abort db submission!')
+        return ''
+
     db.session.add(message)
     db.session.commit()
 

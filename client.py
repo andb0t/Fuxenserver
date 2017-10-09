@@ -6,8 +6,6 @@ def read_messages(addr):
     response = requests.get(addr)
     messages = response.json()
 
-    print('TODO: implement check for json data')
-
     print('Got response from server')
     for m in messages:
         print(m)
@@ -15,6 +13,7 @@ def read_messages(addr):
 
 
 def post_message(addr, username, score, message):
+    print('TODO: implement check for json data')
     response = requests.post(addr,
                              json={
                                    'username': username,
