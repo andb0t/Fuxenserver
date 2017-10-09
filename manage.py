@@ -4,12 +4,12 @@ import app
 
 
 def create():
-    print('Creating db')
+    print('Create db')
     app.db.create_all()
 
 
 def delete():
-    print('Deleting db')
+    print('Delete db')
     app.db.drop_all()
 
 
@@ -21,7 +21,7 @@ def recreate():
 
 def init():
     print('Populating with test data')
-    message = app.Message(username='testbeep', score='0', message='This is generated when the database is created.')
+    message = app.Message(username='testbeep', score='0', message='This is generated when the database is created.', time='test time')
     app.db.session.add(message)
     app.db.session.commit()
 

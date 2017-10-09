@@ -1,3 +1,4 @@
+import datetime
 import os
 import flask
 import flask_sqlalchemy
@@ -20,11 +21,13 @@ class Message(db.Model):
     username = db.Column(db.String(80))
     score = db.Column(db.Integer)
     message = db.Column(db.String(80))
+    time = db.Column(db.String(80))
 
-    def __init__(self, username, score, message):
+    def __init__(self, username, score, message, time):
         self.username = username
         self.score = score
         self.message = message
+        self.time = time
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -34,6 +37,7 @@ class Message(db.Model):
                 'username': self.username,
                 'score': self.score,
                 'message': self.message,
+                'time': self.time,
                 }
 
 
@@ -69,15 +73,21 @@ def post_messages():
     if ('username' not in json) or ('score' not in json) or ('message' not in json):
         flask.abort(400)
 
+    now = datetime.datetime.now()
     message = Message(username=json['username'],
                       score=json['score'],
-                      message=json['message'])
+                      message=json['message'],
+                      time=str(now.strftime("%Y-%m-%d %H:%M"))
+                      )
 
     # # db vetos
     messages = Message.query.all()
     scores = [m.score for m in messages]
     usernames = [m.username for m in messages]
     highScoreTuple = list(zip(scores, usernames))
+    # veto missing username
+    if not message.username:
+        return ''
     # veto same entry twice
     if (message.score, message.username) in highScoreTuple:
         print('Score', message.score, 'and username', message.username, 'alread present. Abort db submission!')
