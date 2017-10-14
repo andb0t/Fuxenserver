@@ -35,7 +35,7 @@ python client.py --name Michael --msg "This is my message to you" --score 1  # e
 ### Web
 Communicate with the webserver as client:
 ```shell
-python client.py --addr https://fuxenserver.herokuapp.com/messages [args]
+python client.py --addr https://fuxenserver.herokuapp.com/scores [args]
 ```
 
 

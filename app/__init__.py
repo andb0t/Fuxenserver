@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 
-class Message(db.Model):
+class ScoreData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
     score = db.Column(db.Integer)
@@ -55,17 +55,25 @@ def index():
 
 
 # ==============================================================================
-# messages api
+# highscore api
 # ==============================================================================
+@app.route('/highscore', methods=['GET'])
+def get_highscore():
+    entries = ScoreData.query.all()
+    return flask.jsonify([m.as_dict() for m in entries])
 
-@app.route('/messages', methods=['GET'])
-def get_messages():
-    messages = Message.query.all()
-    return flask.jsonify([m.as_dict() for m in messages])
+
+# ==============================================================================
+# scores api
+# ==============================================================================
+@app.route('/scores', methods=['GET'])
+def get_scores():
+    entries = ScoreData.query.all()
+    return flask.jsonify([m.as_dict() for m in entries])
 
 
-@app.route('/messages', methods=['POST'])
-def post_messages():
+@app.route('/scores', methods=['POST'])
+def post_scores():
     if not flask.request.is_json:
         flask.abort(400)
 
@@ -76,35 +84,35 @@ def post_messages():
         flask.abort(400)
 
     now = datetime.datetime.now()
-    message = Message(username=json['username'],
+    entry = ScoreData(username=json['username'],
                       score=json['score'],
                       message=json['message'],
                       time=now.strftime("%Y-%m-%d %H:%M:%S")
                       )
 
     # # db vetos
-    messages = Message.query.all()
-    scores = [m.score for m in messages]
-    usernames = [m.username for m in messages]
+    entries = ScoreData.query.all()
+    scores = [m.score for m in entries]
+    usernames = [m.username for m in entries]
     highScoreTuple = list(zip(scores, usernames))
     # veto missing username
-    if not message.username:
+    if not entry.username:
         return ''
     # veto same entry twice
-    if (message.score, message.username) in highScoreTuple:
-        print('Score', message.score, 'and username', message.username, 'alread present. Abort db submission!')
+    if (entry.score, entry.username) in highScoreTuple:
+        print('Score', entry.score, 'and username', entry.username, 'alread present. Abort db submission!')
         return ''
     # veto entry of lower results
-    userScores = [highScore[0] for highScore in highScoreTuple if highScore[1] == message.username]
+    userScores = [highScore[0] for highScore in highScoreTuple if highScore[1] == entry.username]
     if userScores:
         highScore = max(userScores)
     else:
         highScore = 0
-    if message.score < highScore:
-        print('Score', str(message.score), ' less than existing highscore', str(highScore) + '. Abort db submission!')
+    if entry.score < highScore:
+        print('Score', str(entry.score), ' less than existing highscore', str(highScore) + '. Abort db submission!')
         return ''
 
-    db.session.add(message)
+    db.session.add(entry)
     db.session.commit()
 
     return ''

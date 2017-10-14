@@ -21,11 +21,11 @@ def reset():
 
 def test_entry():
     print('Populating with test data')
-    message = app.Message(username='Test Entry',
-                          score='0',
-                          message='This is an automatically created test message.',
-                          time='Arbitrary time')
-    app.db.session.add(message)
+    entry = app.Message(username='Test Entry',
+                        score='0',
+                        message='This is an automatically created test message.',
+                        time='Arbitrary time')
+    app.db.session.add(entry)
     app.db.session.commit()
 
 
