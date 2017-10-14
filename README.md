@@ -29,13 +29,14 @@ heroku run python manage.py recreate  # example, recreating the database
 ### Local
 ```shell
 python client.py --help  # get some info in usage
-python client.py --name Michael --msg "This is my message to you" --score 1  # example of usage
+python client.py post --name Michael --msg "This is my message to you" --score 1  # example for posting
+python client.py read  # example for reading
 ```
 
 ### Web
 Communicate with the webserver as client:
 ```shell
-python client.py --addr https://fuxenserver.herokuapp.com/scores [args]
+python client.py [TASK] --addr https://fuxenserver.herokuapp.com/ [args]
 ```
 
 

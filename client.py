@@ -1,5 +1,8 @@
+from __future__ import print_function
+
 import argparse
 import requests
+import tabulate
 
 
 def read_entries(addr):
@@ -7,14 +10,14 @@ def read_entries(addr):
     scores = response.json()
 
     print('Got response from server')
+    keys = sorted(scores[0].keys())
+    table = []
     for s in scores:
-        print(s)
-    print()
+        table.append([s[key] for key in keys])
+    print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
 
 
 def post_entry(addr, username, score, message):
-    print('TODO: implement check for json data')
-
     response = requests.post(addr,
                              json={
                                    'username': username,
@@ -27,12 +30,22 @@ def post_entry(addr, username, score, message):
 
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--addr', default='http://localhost:5000/scores', help='Host adress')
+parser.add_argument('task', choices=['read', 'post'], help='Type of server interaction')
+parser.add_argument('--addr', default='http://localhost:5000/', help='Host adress')
 parser.add_argument('--name', default='', help='Name of user')
 parser.add_argument('--msg', default='', help='Optional message')
 parser.add_argument('--score', default=0, type=int, help='Achieved score')
+parser.add_argument('--route', default='scores', help='Use this URL route string')
 args = parser.parse_args()
 
-read_entries(args.addr)
-post_entry(args.addr, args.name, args.score, args.msg)
-read_entries(args.addr)
+
+url = args.addr + args.route
+print(url)
+if args.task == 'post':
+    print('Before insertion:')
+    read_entries(url)
+    post_entry(url, args.name, args.score, args.msg)
+    print('After insertion:')
+    read_entries(url)
+elif args.task == 'read':
+    read_entries(url)
