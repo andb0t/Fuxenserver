@@ -3,9 +3,8 @@
 This is a small webserver to handle a high score list connected with the game Fuxensnake.
 
 ## Installation
-Install heroku.
-
-Create a virtualenv and execute `pip install -r requirements.txt`
+* Install heroku
+* create a virtualenv and execute `pip install -r requirements.txt`
 
 ## Server side
 
