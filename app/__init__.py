@@ -60,7 +60,11 @@ def index():
 @app.route('/highscore', methods=['GET'])
 def get_highscore():
     entries = ScoreData.query.all()
-    return flask.jsonify([m.as_dict() for m in entries])
+    scores = [e.as_dict() for e in entries]
+    scores.sort(key=lambda x: x['score'], reverse=True)
+    for score in scores:
+        score.pop('message', None)
+    return flask.jsonify(scores)
 
 
 # ==============================================================================
@@ -69,7 +73,7 @@ def get_highscore():
 @app.route('/scores', methods=['GET'])
 def get_scores():
     entries = ScoreData.query.all()
-    return flask.jsonify([m.as_dict() for m in entries])
+    return flask.jsonify([e.as_dict() for e in entries])
 
 
 @app.route('/scores', methods=['POST'])
@@ -77,7 +81,6 @@ def post_scores():
     if not flask.request.is_json:
         flask.abort(400)
 
-    # print(flask.request.get_json())
     json = flask.request.get_json()
 
     if ('username' not in json) or ('score' not in json) or ('message' not in json):
@@ -92,18 +95,16 @@ def post_scores():
 
     # # db vetos
     entries = ScoreData.query.all()
-    scores = [m.score for m in entries]
-    usernames = [m.username for m in entries]
-    highScoreTuple = list(zip(scores, usernames))
     # veto missing username
     if not entry.username:
         return ''
     # veto same entry twice
-    if (entry.score, entry.username) in highScoreTuple:
-        print('Score', entry.score, 'and username', entry.username, 'alread present. Abort db submission!')
-        return ''
+    for thisEntry in entries:
+        if entry.score == thisEntry.score and entry.username == thisEntry.username:
+            print('Score', entry.score, 'and username', entry.username, 'alread present. Abort db submission!')
+            return ''
     # veto entry of lower results
-    userScores = [highScore[0] for highScore in highScoreTuple if highScore[1] == entry.username]
+    userScores = [e.score for e in entries if e.username == entry.username]
     if userScores:
         highScore = max(userScores)
     else:
