@@ -10,6 +10,7 @@ app = flask.Flask('foxApp')
 # configure frontend for interaction
 # ==============================================================================
 # select the database backend and where to find it
+# os.environ['DATABASE_URL'] = 'http://127.0.0.1:5000/'  # uncomment to run with flask
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 # suppress warning
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

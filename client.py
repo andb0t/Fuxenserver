@@ -26,11 +26,11 @@ def post_message(addr, username, score, message):
     response.raise_for_status()
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--addr', default='http://localhost:5000/messages')
-parser.add_argument('--name', default='')
-parser.add_argument('--msg', default='')
-parser.add_argument('--score', default=0, type=int)
+parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--addr', default='http://localhost:5000/messages', help='Host adress')
+parser.add_argument('--name', default='', help='Name of user')
+parser.add_argument('--msg', default='', help='Optional message')
+parser.add_argument('--score', default=0, type=int, help='Achieved score')
 args = parser.parse_args()
 
 read_messages(args.addr)
