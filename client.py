@@ -43,7 +43,7 @@ args = parser.parse_args()
 
 
 url = args.addr + args.route
-print(url)
+print('Contacting', url, '...')
 if args.task == 'post':
     print('Before insertion:')
     read_entries(url)
