@@ -1,4 +1,5 @@
 web: waitress-serve --port=$PORT app:app
 local: waitress-serve --port=5000 app:app
-start-db: python manage.py create init
-recreate-db: python manage.py recreate
+create-db: python manage.py create
+reset-db: python manage.py reset
+test-db: python manage.py test_entry

@@ -4,7 +4,7 @@ import app
 
 
 def create():
-    print('Create db')
+    print('Create db if non-existing')
     app.db.create_all()
 
 
@@ -13,24 +13,24 @@ def delete():
     app.db.drop_all()
 
 
-def recreate():
-    print('Recreate db')
+def reset():
+    print('Reset db')
     delete()
     create()
 
 
-def init():
+def test_entry():
     print('Populating with test data')
-    message = app.Message(username='testbeep',
+    message = app.Message(username='Test Entry',
                           score='0',
-                          message='This is generated when the database is created.',
-                          time='test time')
+                          message='This is an automatically created test message.',
+                          time='Arbitrary time')
     app.db.session.add(message)
     app.db.session.commit()
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('command', nargs='*', choices=['create', 'delete', 'recreate', 'init'])
+parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'test_entry'])
 args = parser.parse_args()
 
 for command in args.command:
@@ -38,7 +38,7 @@ for command in args.command:
         create()
     if command == 'delete':
         delete()
-    if command == 'recreate':
-        recreate()
-    if command == 'init':
-        init()
+    if command == 'reset':
+        reset()
+    if command == 'test_entry':
+        test_entry()
