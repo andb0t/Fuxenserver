@@ -75,7 +75,9 @@ def get_highscore():
 @app.route('/scores', methods=['GET'])
 def get_scores():
     entries = ScoreData.query.all()
-    return flask.jsonify([e.as_dict() for e in entries])
+    scores = [e.as_dict() for e in entries]
+    scores.reverse()
+    return flask.jsonify(scores)
 
 
 @app.route('/scores', methods=['POST'])
