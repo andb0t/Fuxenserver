@@ -18,7 +18,6 @@ heroku local [COMMAND]  # general way to use commands from `Procfile`
 ### Web
 Environmental variables accessible to heroku can be set in `.env`. Special commands can be defined in `Procfile`.
 ```shell
-# heroku [COMMAND]  # use commands from `Procfile`
 heroku run [COMMAND]  # run any command on heroku server
 heroku run python manage.py reset  # example, recreating the database
 ```
