@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import argparse
 import requests
+
 import tabulate
 
 
@@ -43,18 +44,25 @@ parser.add_argument('--score', default=0, type=int, help='Achieved score')
 parser.add_argument('--route', default='scores', help='Use this URL route string')
 args = parser.parse_args()
 
-if args.addr == 'web':
-    args.addr = 'https://fuxenserver.herokuapp.com/'
-elif args.addr == 'local':
-    args.addr = 'http://localhost:5000/'
 
-url = args.addr + args.route
-print('Contacting', url, '...')
-if args.task == 'post':
-    print('Before insertion:')
-    read_entries(url)
-    post_entry(url, args.name, args.score, args.msg)
-    print('After insertion:')
-    read_entries(url)
-elif args.task == 'read':
-    read_entries(url)
+def main():
+    if args.addr == 'web':
+        addr = 'https://fuxenserver.herokuapp.com/'
+    elif args.addr == 'local':
+        addr = 'http://localhost:5000/'
+    else:
+        addr = args.addr
+    url = addr + args.route
+    print('Contacting', url, '...')
+    if args.task == 'post':
+        print('Before insertion:')
+        read_entries(url)
+        post_entry(url, args.name, args.score, args.msg)
+        print('After insertion:')
+        read_entries(url)
+    elif args.task == 'read':
+        read_entries(url)
+
+
+if __name__ == '__main__':
+    main()
