@@ -42,7 +42,7 @@ def main():
     parser.add_argument('--name', default='', help='Name of user')
     parser.add_argument('--msg', default='', help='Optional message')
     parser.add_argument('--score', default=0, type=int, help='Achieved score')
-    parser.add_argument('--route', default='scores', help='Use this URL route string')
+    parser.add_argument('--URI', default='scores', help='Use this URI string')
     args = parser.parse_args()
 
     if args.addr == 'web':
@@ -51,16 +51,16 @@ def main():
         addr = 'http://localhost:5000/'
     else:
         addr = args.addr
-    url = addr + args.route
-    print('Contacting', url, '...')
+    URL = addr + args.URI
+    print('Contacting', URL, '...')
     if args.task == 'post':
         print('Before insertion:')
-        read_entries(url)
-        post_entry(url, args.name, args.score, args.msg)
+        read_entries(URL)
+        post_entry(URL, args.name, args.score, args.msg)
         print('After insertion:')
-        read_entries(url)
+        read_entries(URL)
     elif args.task == 'read':
-        read_entries(url)
+        read_entries(URL)
 
 
 if __name__ == '__main__':
