@@ -12,12 +12,13 @@ def read_entries(addr):
     print('Got response from server')
     try:
         keys = sorted(scores[0].keys())
-        table = []
-        for s in scores:
-            table.append([s[key] for key in keys])
-        print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
     except IndexError:
         print('No entry present')
+        return
+    table = []
+    for s in scores:
+        table.append([s[key] for key in keys])
+    print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
 
 
 def post_entry(addr, username, score, message):
