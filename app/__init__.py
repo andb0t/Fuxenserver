@@ -20,6 +20,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 
+MAX_LENGTH_USERNAME = 20
+
+
 class ScoreData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
@@ -28,7 +31,7 @@ class ScoreData(db.Model):
     time = db.Column(db.String(80))
 
     def __init__(self, username, score, message, time):
-        self.username = username
+        self.username = username[:MAX_LENGTH_USERNAME]
         self.score = score
         self.message = message
         self.time = time
