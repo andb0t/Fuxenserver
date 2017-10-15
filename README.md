@@ -35,7 +35,8 @@ python client.py read  # example for reading
 ### Web
 Communicate with the webserver as client:
 ```shell
-python client.py [TASK] --addr https://fuxenserver.herokuapp.com/ [args]
+python client.py [TASK] --addr https://fuxenserver.herokuapp.com/ [args]  # explicit address
+python client.py [TASK] --addr web [args]  # predefined address
 ```
 
 

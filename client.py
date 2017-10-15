@@ -34,13 +34,18 @@ def post_entry(addr, username, score, message):
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('task', choices=['read', 'post'], help='Type of server interaction')
-parser.add_argument('--addr', default='http://localhost:5000/', help='Host adress')
+parser.add_argument('--addr', default='http://localhost:5000/',
+                    help='Host adress (use \'web\' or \'local\' for predefined addresses)')
 parser.add_argument('--name', default='', help='Name of user')
 parser.add_argument('--msg', default='', help='Optional message')
 parser.add_argument('--score', default=0, type=int, help='Achieved score')
 parser.add_argument('--route', default='scores', help='Use this URL route string')
 args = parser.parse_args()
 
+if args.addr == 'web':
+    args.addr = 'https://fuxenserver.herokuapp.com/'
+elif args.addr == 'local':
+    args.addr = 'http://localhost:5000/'
 
 url = args.addr + args.route
 print('Contacting', url, '...')
