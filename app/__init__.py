@@ -29,12 +29,14 @@ class ScoreData(db.Model):
     score = db.Column(db.Integer)
     message = db.Column(db.String(80))
     time = db.Column(db.String(80))
+    ip = db.Column(db.String(80))
 
-    def __init__(self, username, score, message, time):
+    def __init__(self, username, score, message, time, ip):
         self.username = username[:MAX_LENGTH_USERNAME]
         self.score = score
         self.message = message
         self.time = time
+        self.ip = ip
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -46,6 +48,7 @@ class ScoreData(db.Model):
                 'score': self.score,
                 'message': self.message,
                 'time': self.time,
+                'ip': self.ip,
                 }
 
 
@@ -100,7 +103,8 @@ def post_scores():
     entry = ScoreData(username=json['username'],
                       score=json['score'],
                       message=json['message'],
-                      time=now.strftime("%Y-%m-%d %H:%M:%S")
+                      time=now.strftime("%Y-%m-%d %H:%M:%S"),
+                      ip=flask.request.remote_addr,
                       )
 
     # # db vetos

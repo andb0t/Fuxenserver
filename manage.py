@@ -99,7 +99,9 @@ def fill_test():
     entry = app.Message(username='Test Entry',
                         score='0',
                         message='This is an automatically created test message.',
-                        time='Arbitrary time')
+                        time='Arbitrary time',
+                        ip='0.0.0.0',
+                        )
     app.db.session.add(entry)
     app.db.session.commit()
 

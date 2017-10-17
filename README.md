@@ -50,4 +50,10 @@ heroku [local:]run python manage.py --show --ID 1  # show entry with ID 1
 heroku [local:]run python manage.py --modify --ID 1 --change score 0  # modify entry with ID 1
 heroku [local:]run python manage.py --delete --ID 1  # delete entry with ID 1
 heroku [local:]run python manage.py --show --filter username Simon  # show entries with specific username
+heroku [local:]run python manage.py raw --sql "SELECT username FROM score_Data"  # run raw sql
+```
+Locally, the database can directly be modified via sqlite3:
+```SQL
+.open test.db
+ALTER TABLE score_data ADD COLUMN ip str(80)  # to add a column
 ```
