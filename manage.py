@@ -128,14 +128,15 @@ for command in args.command:
             if key and val:
                 modify_entry(args.ID, key, val)
     elif args.filter:
-        if command == 'show':
-            key, val = None, None
-            try:
-                key = args.filter[0]
-                val = args.filter[1]
-            except IndexError:
-                print('IndexError: filter requires two parameters!')
-            show_filtered(key, val)
+        key, val = None, None
+        try:
+            key = args.filter[0]
+            val = args.filter[1]
+        except IndexError:
+            print('IndexError: filter requires two parameters!')
+        if key and val:
+            if command == 'show':
+                show_filtered(key, val)
     elif command == 'fill_test':
         fill_test()
     else:
