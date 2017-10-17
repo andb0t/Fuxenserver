@@ -59,6 +59,13 @@ def show_entry(ID):
     dict_table([entry.as_dict()])
 
 
+def show_filtered(key, val):
+    print('Show entries with ', key, ':', val)
+    entries = app.ScoreData.query.filter_by(**{key: val})
+    entryDicts = map(lambda x: x.as_dict(), entries)
+    dict_table(entryDicts)
+
+
 def delete_entry(ID):
     print('Deleting entry with ID', ID)
     entry = app.ScoreData.query.get(ID)
@@ -94,6 +101,7 @@ parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
 parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
 parser.add_argument('--change', nargs='*', help='Specify database key and value')
+parser.add_argument('--filter', nargs='*', help='Specify database key and value')
 args = parser.parse_args()
 
 for command in args.command:
@@ -120,6 +128,15 @@ for command in args.command:
                 print('IndexError: change requires two parameters!')
             if key and val:
                 modify_entry(args.ID, key, val)
+    elif args.filter:
+        if command == 'show':
+            key, val = None, None
+            try:
+                key = args.filter[0]
+                val = args.filter[1]
+            except IndexError:
+                print('IndexError: filter requires two parameters!')
+            show_filtered(key, val)
     elif command == 'fill_test':
         fill_test()
     else:
