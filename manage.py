@@ -69,7 +69,17 @@ def delete_entry(ID):
     app.db.session.commit()
 
 
-def test_entry():
+def modify_entry(ID, key, val):
+    print('Modifying entry with ID', ID, key, 'to', val)
+    entry = app.ScoreData.query.get(ID)
+    if not entry:
+        print('No matching entry found! Abort.')
+        return
+    setattr(entry, key, val)
+    app.db.session.commit()
+
+
+def fill_test():
     print('Populating with test data')
     entry = app.Message(username='Test Entry',
                         score='0',
@@ -80,9 +90,10 @@ def test_entry():
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'test_entry', 'show'])
-parser.add_argument('--ID', default=0, type=int, help='ID of entry to show')
+parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test', 'show', 'modify'])
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
+parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
+parser.add_argument('--change', nargs='*', help='Specify database key and value')
 args = parser.parse_args()
 
 for command in args.command:
@@ -95,10 +106,21 @@ for command in args.command:
             reset_db()
         if command == 'show':
             show_db()
-    else:
+    elif args.ID is not None:
         if command == 'show':
             show_entry(args.ID)
         if command == 'delete':
             delete_entry(args.ID)
-    if command == 'test_entry':
-        test_entry()
+        if command == 'modify' and args.change:
+            key, val = None, None
+            try:
+                key = args.change[0]
+                val = args.change[1]
+            except IndexError:
+                print('IndexError: change requires two parameters!')
+            if key and val:
+                modify_entry(args.ID, key, val)
+    elif command == 'fill_test':
+        fill_test()
+    else:
+        print('Command faulty, check the help!')
