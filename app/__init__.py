@@ -71,10 +71,11 @@ def get_highscore():
     entries = ScoreData.query.all()
     scores = [e.as_dict() for e in entries]
     scores.sort(key=lambda x: x['score'], reverse=True)
+    hsContent = ['username', 'score', 'time']
     for idx, score in enumerate(scores):
-        score.pop('message', None)
-        score.pop('id', None)
-        score.pop('ip', None)
+        for cont in score.keys():
+            if cont not in hsContent:
+                score.pop(cont, None)
         score['rank'] = idx + 1
     return flask.jsonify(scores)
 
