@@ -74,6 +74,7 @@ def get_highscore():
     for idx, score in enumerate(scores):
         score.pop('message', None)
         score.pop('id', None)
+        score.pop('ip', None)
         score['rank'] = idx + 1
     return flask.jsonify(scores)
 
