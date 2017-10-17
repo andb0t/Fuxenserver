@@ -9,8 +9,6 @@ import tabulate
 def read_entries(addr):
     response = requests.get(addr)
     scores = response.json()
-
-    print('Got response from server')
     try:
         keys = sorted(scores[0].keys())
     except IndexError:

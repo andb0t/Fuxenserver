@@ -12,7 +12,6 @@ except NameError:
 
 
 def dict_table(dicts):
-    print('Got response from server')
     try:
         keys = sorted(dicts[0].keys())
     except IndexError:
@@ -46,7 +45,7 @@ def reset_db():
 
 def show_db():
     entries = app.ScoreData.query.all()
-    entryDicts = map(lambda x: x.as_dict(), entries)
+    entryDicts = list(map(lambda x: x.as_dict(), entries))
     dict_table(entryDicts)
 
 
@@ -62,7 +61,7 @@ def show_entry(ID):
 def show_filtered(key, val):
     print('Show entries with ', key, ':', val)
     entries = app.ScoreData.query.filter_by(**{key: val})
-    entryDicts = map(lambda x: x.as_dict(), entries)
+    entryDicts = list(map(lambda x: x.as_dict(), entries))
     dict_table(entryDicts)
 
 
