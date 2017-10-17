@@ -75,6 +75,15 @@ def delete_entry(ID):
     app.db.session.commit()
 
 
+def execute_sql(sql):
+    print('Execute this SQL command: "{0}"'.format(sql))
+    result = app.db.engine.execute(sql)
+    # result = app.db.get_engine().execute(sql)
+    # result = app.db.session.execute(sql)
+    for row in result:
+        print(row)
+
+
 def modify_entry(ID, key, val):
     print('Modifying entry with ID', ID, key, 'to', val)
     entry = app.ScoreData.query.get(ID)
@@ -96,9 +105,10 @@ def fill_test():
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test', 'show', 'modify'])
+parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test', 'show', 'modify', 'raw'])
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
 parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
+parser.add_argument('--sql', default=None, help='The SQL command to be executes')
 parser.add_argument('--change', nargs='*', help='Specify database key and value')
 parser.add_argument('--filter', nargs='*', help='Specify database key and value')
 args = parser.parse_args()
@@ -137,6 +147,9 @@ for command in args.command:
         if key and val:
             if command == 'show':
                 show_filtered(key, val)
+    elif args.sql:
+        if command == 'raw':
+            execute_sql(args.sql)
     elif command == 'fill_test':
         fill_test()
     else:
