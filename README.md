@@ -45,4 +45,9 @@ python client.py [TASK] --addr web [args]  # predefined address
 The database is stored as flask sqlalchemy database. It can be managed with `manage.py` called via heroku. Here are some examples:
 ```shell
 heroku [local] reset-db  # to use predefined commands
+heroku [local:]run python manage.py --show --all  # show database contents
+heroku [local:]run python manage.py --show --ID 1  # show entry with ID 1
+heroku [local:]run python manage.py --modify --ID 1 --change score 0  # modify entry with ID 1
+heroku [local:]run python manage.py --delete --ID 1  # delete entry with ID 1
+heroku [local:]run python manage.py --show --filter username Simon  # show entries with specific username
 ```
