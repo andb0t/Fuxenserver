@@ -77,9 +77,9 @@ def delete_entry(ID):
 
 def execute_sql(sql):
     print('Execute this SQL command: "{0}"'.format(sql))
-    result = app.db.engine.execute(sql)
+    # result = app.db.engine.execute(sql)
     # result = app.db.get_engine().execute(sql)
-    # result = app.db.session.execute(sql)
+    result = app.db.session.execute(sql)
     for row in result:
         print(row)
 
