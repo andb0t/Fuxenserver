@@ -13,13 +13,14 @@ Start the heroku app locally with
 ```shell
 heroku local local
 heroku local [COMMAND]  # general way to use commands from `Procfile`
+heroku local:run python manage.py reset  # execute custom commands
 ```
 
 ### Web
 Environmental variables accessible to heroku can be set in `.env`. Special commands can be defined in `Procfile`.
 ```shell
 heroku run [COMMAND]  # run any command on heroku server
-heroku run python manage.py reset  # example, recreating the database
+heroku run python manage.py reset  # execute custom commands
 ```
 
 
@@ -43,5 +44,5 @@ python client.py [TASK] --addr web [args]  # predefined address
 ## Database
 The database is stored as flask sqlalchemy database. It can be managed with `manage.py` called via heroku. Here are some examples:
 ```shell
-heroku [local] reset-db
+heroku [local] reset-db  # to use predefined commands
 ```

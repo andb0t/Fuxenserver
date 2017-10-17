@@ -41,6 +41,7 @@ class ScoreData(db.Model):
 
     def as_dict(self):
         return {
+                'id': self.id,
                 'username': self.username,
                 'score': self.score,
                 'message': self.message,
@@ -69,6 +70,7 @@ def get_highscore():
     scores.sort(key=lambda x: x['score'], reverse=True)
     for idx, score in enumerate(scores):
         score.pop('message', None)
+        score.pop('id', None)
         score['rank'] = idx + 1
     return flask.jsonify(scores)
 
