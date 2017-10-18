@@ -42,18 +42,28 @@ python client.py [TASK] --addr web [args]  # predefined address
 
 
 ## Database
+
+### Manage score entries
 The database is stored as flask sqlalchemy database. It can be managed with `manage.py` called via heroku. Here are some examples:
 ```shell
 heroku [local] reset-db  # to use predefined commands
-heroku [local:]run python manage.py --show --all  # show database contents
-heroku [local:]run python manage.py --show --ID 1  # show entry with ID 1
-heroku [local:]run python manage.py --modify --ID 1 --change score 0  # modify entry with ID 1
-heroku [local:]run python manage.py --delete --ID 1  # delete entry with ID 1
-heroku [local:]run python manage.py --show --filter username Simon  # show entries with specific username
+heroku [local:]run python manage.py show --all  # show database contents
+heroku [local:]run python manage.py show --ID 1  # show entry with ID 1
+heroku [local:]run python manage.py modify --ID 1 --change score 0  # modify entry with ID 1
+heroku [local:]run python manage.py delete --ID 1  # delete entry with ID 1
+heroku [local:]run python manage.py show --filter username Simon  # show entries with specific username
 heroku [local:]run python manage.py raw --sql "SELECT username FROM score_Data"  # run raw sql
 ```
 Locally, the database can directly be modified via sqlite3:
 ```SQL
 .open test.db
 ALTER TABLE score_data ADD COLUMN ip str(80)  # to add a column
+```
+
+### Manage message entries
+To submit new news messages or alerts to users, use this interface:
+```shell
+heroku [local:]run python manage.py daily --msg "My message for today"  # show this message as top news
+heroku [local:]run python manage.py daily --msg "Warning: tornado incoming" --cat "alert"  # alert all users
+heroku [local:]run python manage.py daily --msg "Download new version!" --cat "alert" --version "1.2"  # alert all users with software verison lower than 1.2
 ```

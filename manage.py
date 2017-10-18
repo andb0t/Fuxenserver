@@ -108,7 +108,7 @@ def fill_test():
     app.db.session.commit()
 
 
-def post_daily(message, category='news', version='all'):
+def post_daily(message, category, version):
     print('Submitting new daily message (' + version, ',', category+'):', message)
     now = datetime.datetime.now()
     entry = app.DailyMessage(message=message,
@@ -129,6 +129,8 @@ parser.add_argument('--sql', default=None, help='The SQL command to be executes'
 parser.add_argument('--change', nargs='*', help='Specify database key and value')
 parser.add_argument('--filter', nargs='*', help='Specify database key and value')
 parser.add_argument('--msg', default=None, help='Daily message')
+parser.add_argument('--cat', default='news', help='Daily message category')
+parser.add_argument('--version', default='all', help='Daily message for all versions lower than this')
 args = parser.parse_args()
 
 for command in args.command:
@@ -167,7 +169,7 @@ for command in args.command:
                 show_filtered(key, val)
     elif args.msg:
         if command == 'daily':
-            post_daily(args.msg)
+            post_daily(args.msg, args.cat, args.version)
     elif args.sql:
         if command == 'raw':
             execute_sql(args.sql)
