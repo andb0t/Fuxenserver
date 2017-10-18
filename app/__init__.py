@@ -72,12 +72,22 @@ def get_highscore():
     scores = [e.as_dict() for e in entries]
     scores.sort(key=lambda x: x['score'], reverse=True)
     hsContent = ['username', 'score', 'time']
-    for idx, score in enumerate(scores):
+    dropLowerSame = 'username'
+    allUserNames = set([score[dropLowerSame] for score in scores])
+    idx = 1
+    highScores = []
+    for score in scores:
+        if score[dropLowerSame] not in allUserNames:
+            continue
+        else:
+            allUserNames.discard(score[dropLowerSame])
         for cont in score.keys():
             if cont not in hsContent:
                 score.pop(cont, None)
-        score['rank'] = idx + 1
-    return flask.jsonify(scores)
+        score['rank'] = idx
+        highScores.append(score)
+        idx += 1
+    return flask.jsonify(highScores)
 
 
 # ==============================================================================
