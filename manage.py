@@ -12,6 +12,17 @@ except NameError:
     pass
 
 
+def break_lines(string, nMax):
+    pieces = []
+    while string:
+        try:
+            pieces.append(string[:nMax-1].lstrip())
+        except TypeError:
+            return string
+        string = string[nMax-1:]
+    return '\n'.join(pieces)
+
+
 def dict_table(dicts):
     try:
         keys = sorted(dicts[0].keys())
@@ -19,8 +30,9 @@ def dict_table(dicts):
         print('No entry present')
         return
     table = []
+    maxColLength = 60
     for d in dicts:
-        table.append([d[key] for key in keys])
+        table.append([break_lines(d[key], maxColLength) for key in keys])
     print(tabulate.tabulate(table, headers=keys, tablefmt='grid'))
 
 
