@@ -135,7 +135,6 @@ parser.add_argument('--filter', nargs='*', help='Specify database key and value'
 parser.add_argument('--msg', default=None, help='Daily message')
 parser.add_argument('--category', default='news', help='Daily message category')
 parser.add_argument('--version', default='all', help='Daily message for all versions lower than this')
-parser.add_argument('--dropthistable', action='store_true', default=False, help='Drop specific hardcoded table')
 args = parser.parse_args()
 
 for command in args.command:
@@ -178,8 +177,6 @@ for command in args.command:
     elif args.sql:
         if command == 'raw':
             execute_sql(args.sql)
-    elif args.dropthistable:
-        drop_message_table()
     elif command == 'fill_test':
         fill_test()
     else:
