@@ -146,15 +146,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test',
                                                    'show', 'modify',
                                                    'raw',
-                                                   'news', 'alert', 'version'])
+                                                   'news', 'alert', 'release'])
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
 parser.add_argument('--table', default='scores', choices=['scores', 'messages'], help='Target database table')
 parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
 parser.add_argument('--change', nargs='*', help='Specify database key and value')
 parser.add_argument('--filter', nargs='*', help='Specify database key and value')
 parser.add_argument('--sql', default=None, help='The SQL command to be executes')
-parser.add_argument('--msg', default=None, help='Daily message')
-parser.add_argument('--version', default='all', help='Daily message for all versions lower than this')
+parser.add_argument('--msg', default=None, help='Message')
+parser.add_argument('--version', default='all', help='Message to display for all versions lower than this')
 args = parser.parse_args()
 
 for command in args.command:
@@ -198,7 +198,7 @@ for command in args.command:
             post_news(args.msg, 'news')
         elif command == 'alert':
             post_news(args.msg, 'alert', args.version)
-        elif command == 'version' and args.version != 'all':
+        elif command == 'release' and args.version != 'all':
             post_news(args.msg, 'release', args.version)
     elif args.sql:
         if command == 'raw':
