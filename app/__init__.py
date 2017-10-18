@@ -107,7 +107,7 @@ def get_daily():
     daily = None
     if entry:
         daily = entry.as_dict()
-    return flask.jsonify(daily)
+    return flask.jsonify([daily])
 
 
 # ==============================================================================
