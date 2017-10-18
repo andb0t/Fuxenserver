@@ -45,35 +45,62 @@ def reset_db():
 
 
 def show_db():
+    print('ScoreData content:')
     entries = app.ScoreData.query.all()
+    entryDicts = list(map(lambda x: x.as_dict(), entries))
+    dict_table(entryDicts)
+    print('DailyMessage content:')
+    entries = app.DailyMessage.query.all()
     entryDicts = list(map(lambda x: x.as_dict(), entries))
     dict_table(entryDicts)
 
 
-def show_entry(ID):
-    print('Showing entry with ID', ID)
-    entry = app.ScoreData.query.get(ID)
+def get_table(table):
+    if table == 'scores':
+        return app.ScoreData
+    elif table == 'messages':
+        return app.DailyMessage
+
+
+def get_entry(ID, table):
+    entry = get_table(table).query.get(ID)
     if not entry:
         print('No matching entry found! Abort.')
+        return None
+    return entry
+
+
+def show_entry(ID, table):
+    print('Showing entry in table', table, 'with ID', ID)
+    entry = get_entry(ID, table)
+    if not entry:
         return
     dict_table([entry.as_dict()])
 
 
-def show_filtered(key, val):
-    print('Show entries with ', key, ':', val)
-    entries = app.ScoreData.query.filter_by(**{key: val})
-    entryDicts = list(map(lambda x: x.as_dict(), entries))
-    dict_table(entryDicts)
-
-
-def delete_entry(ID):
-    print('Deleting entry with ID', ID)
-    entry = app.ScoreData.query.get(ID)
+def delete_entry(ID, table):
+    print('Deleting entry in table', table, 'with ID', ID)
+    entry = get_entry(ID, table)
     if not entry:
-        print('No matching entry found! Abort.')
         return
     app.db.session.delete(entry)
     app.db.session.commit()
+
+
+def modify_entry(ID, table, key, val):
+    print('Modifying entry in table', table, 'with ID', ID, key, 'to', val)
+    entry = get_entry(ID, table)
+    if not entry:
+        return
+    setattr(entry, key, val)
+    app.db.session.commit()
+
+
+def show_filtered(table, key, val):
+    print('Show entries with ', key, ':', val)
+    entries = get_table(table).query.filter_by(**{key: val})
+    entryDicts = list(map(lambda x: x.as_dict(), entries))
+    dict_table(entryDicts)
 
 
 def execute_sql(sql):
@@ -83,16 +110,6 @@ def execute_sql(sql):
     result = app.db.session.execute(sql)
     for row in result:
         print(row)
-
-
-def modify_entry(ID, key, val):
-    print('Modifying entry with ID', ID, key, 'to', val)
-    entry = app.ScoreData.query.get(ID)
-    if not entry:
-        print('No matching entry found! Abort.')
-        return
-    setattr(entry, key, val)
-    app.db.session.commit()
 
 
 def fill_test():
@@ -108,8 +125,8 @@ def fill_test():
     app.db.session.commit()
 
 
-def post_daily(message, category, version):
-    print('Submitting new daily message (' + version, ',', category+'):', message)
+def post_news(message, category, version='all'):
+    print('Submitting news message (' + version, ',', category+'):', message)
     now = datetime.datetime.now()
     entry = app.DailyMessage(message=message,
                              time=now.strftime("%Y-%m-%d %H:%M:%S"),
@@ -120,20 +137,22 @@ def post_daily(message, category, version):
     app.db.session.commit()
 
 
-def drop_message_table():
-    app.DailyMessage.__table__.drop(app.db.engine)
+def drop_message_table(table):
+    get_table(table).__table__.drop(app.db.engine)
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test',
-                                                   'show', 'modify', 'raw', 'daily'])
+                                                   'show', 'modify',
+                                                   'raw',
+                                                   'news', 'alert', 'version'])
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
+parser.add_argument('--table', default='scores', choices=['scores', 'messages'], help='Target database table')
 parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
-parser.add_argument('--sql', default=None, help='The SQL command to be executes')
 parser.add_argument('--change', nargs='*', help='Specify database key and value')
 parser.add_argument('--filter', nargs='*', help='Specify database key and value')
+parser.add_argument('--sql', default=None, help='The SQL command to be executes')
 parser.add_argument('--msg', default=None, help='Daily message')
-parser.add_argument('--category', default='news', help='Daily message category')
 parser.add_argument('--version', default='all', help='Daily message for all versions lower than this')
 args = parser.parse_args()
 
@@ -149,9 +168,9 @@ for command in args.command:
             show_db()
     elif args.ID is not None:
         if command == 'show':
-            show_entry(args.ID)
+            show_entry(args.ID, args.table)
         if command == 'delete':
-            delete_entry(args.ID)
+            delete_entry(args.ID, args.table)
         if command == 'modify' and args.change:
             key, val = None, None
             try:
@@ -160,7 +179,7 @@ for command in args.command:
             except IndexError:
                 print('IndexError: change requires two parameters!')
             if key and val:
-                modify_entry(args.ID, key, val)
+                modify_entry(args.ID, args.table, key, val)
     elif args.filter:
         key, val = None, None
         try:
@@ -170,10 +189,14 @@ for command in args.command:
             print('IndexError: filter requires two parameters!')
         if key and val:
             if command == 'show':
-                show_filtered(key, val)
+                show_filtered(args.table, key, val)
     elif args.msg:
-        if command == 'daily':
-            post_daily(args.msg, args.category, args.version)
+        if command == 'news':
+            post_news(args.msg, 'news')
+        elif command == 'alert':
+            post_news(args.msg, 'alert', args.version)
+        elif command == 'version' and args.version != 'all':
+            post_news(args.msg, 'release', args.version)
     elif args.sql:
         if command == 'raw':
             execute_sql(args.sql)
