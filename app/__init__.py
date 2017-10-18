@@ -56,10 +56,14 @@ class DailyMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(80))
     time = db.Column(db.String(80))
+    category = db.Column(db.String(80))
+    version = db.Column(db.String(80))
 
-    def __init__(self, message, time):
+    def __init__(self, message, time, category, version):
         self.message = message
         self.time = time
+        self.category = category
+        self.version = version
 
     def __repr__(self):
         return '<Message %r>' % self.message
@@ -69,6 +73,8 @@ class DailyMessage(db.Model):
                 'id': self.id,
                 'message': self.message,
                 'time': self.time,
+                'category': self.category,
+                'version': self.version,
                 }
 
 
@@ -80,8 +86,6 @@ def index():
     return 'Hello from FLASK, my hostname is secret'
     # return 'Hello from FLASK, my hostname is: %s \n' % (socket.gethostname())
 
-# http://localhost:5000/
-
 
 # ==============================================================================
 # daily message api
@@ -91,16 +95,20 @@ def get_messages():
     entries = DailyMessage.query.all()
     dailies = [e.as_dict() for e in entries]
     dailies.reverse()
-    # entry = db.session.query(DailyMessage).order_by(DailyMessage.id.desc()).first()
-    # return flask.jsonify(entry)
     return flask.jsonify(dailies)
 
 
 @app.route('/daily', methods=['GET'])
 def get_daily():
-    entry = db.session.query(DailyMessage).order_by(DailyMessage.id.desc()).first()
-    daily = entry.as_dict()
-    return flask.jsonify(daily)
+    entry = db.session.query(DailyMessage).\
+            filter(DailyMessage.category == 'news').\
+            order_by(DailyMessage.id.desc()).\
+            first()
+    if entry:
+        daily = entry.as_dict()
+        return flask.jsonify(daily)
+    else:
+        return 'Not found!'
 
 
 # ==============================================================================

@@ -97,28 +97,32 @@ def modify_entry(ID, key, val):
 
 def fill_test():
     print('Populating with test data')
+    now = datetime.datetime.now()
     entry = app.ScoreData(username='Test Entry',
                           score='0',
                           message='This is an automatically created test message.',
-                          time='Arbitrary time',
+                          time=now.strftime("%Y-%m-%d %H:%M:%S"),
                           ip='0.0.0.0',
                           )
     app.db.session.add(entry)
     app.db.session.commit()
 
 
-def post_daily(msg):
-    print('Submitting new daily message:', msg)
+def post_daily(message, category='news', version='all'):
+    print('Submitting new daily message (' + version, ',', category+'):', message)
     now = datetime.datetime.now()
-    entry = app.DailyMessage(message=msg,
+    entry = app.DailyMessage(message=message,
                              time=now.strftime("%Y-%m-%d %H:%M:%S"),
+                             category=category,
+                             version=version,
                              )
     app.db.session.add(entry)
     app.db.session.commit()
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test', 'show', 'modify', 'raw', 'daily'])
+parser.add_argument('command', nargs='*', choices=['create', 'delete', 'reset', 'fill_test',
+                                                   'show', 'modify', 'raw', 'daily'])
 parser.add_argument('--all', action='store_true', default=False, help='Target entire database')
 parser.add_argument('--ID', default=None, type=int, help='ID of entry to show')
 parser.add_argument('--sql', default=None, help='The SQL command to be executes')
