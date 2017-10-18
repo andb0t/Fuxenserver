@@ -104,11 +104,10 @@ def get_daily():
             filter(DailyMessage.category == 'news').\
             order_by(DailyMessage.id.desc()).\
             first()
+    daily = None
     if entry:
         daily = entry.as_dict()
-        return flask.jsonify(daily)
-    else:
-        return 'Not found!'
+    return flask.jsonify(daily)
 
 
 # ==============================================================================
