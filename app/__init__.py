@@ -54,7 +54,7 @@ class ScoreData(db.Model):
 
 class DailyMessage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String(256))
+    message = db.Column(db.String(240))
     time = db.Column(db.String(80))
     category = db.Column(db.String(80))
     version = db.Column(db.String(80))

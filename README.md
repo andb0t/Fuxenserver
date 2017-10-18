@@ -64,6 +64,6 @@ ALTER TABLE score_data ADD COLUMN ip str(80)  # to add a column
 To submit new news messages or alerts to users, use this interface:
 ```shell
 heroku [local:]run python manage.py daily --msg "My message for today"  # show this message as top news
-heroku [local:]run python manage.py daily --msg "Warning: tornado incoming" --cat "alert"  # alert all users
-heroku [local:]run python manage.py daily --msg "Download new version!" --cat "alert" --version "1.2"  # alert all users with software verison lower than 1.2
+heroku [local:]run python manage.py daily --msg "Warning: tornado incoming" --category "alert"  # alert all users
+heroku [local:]run python manage.py daily --msg "Download new version!" --category "alert" --version "1.2"  # alert all users with software verison lower than 1.2
 ```
