@@ -72,24 +72,15 @@ def get_highscore():
     scores = [e.as_dict() for e in entries]
     scores.sort(key=lambda x: x['score'], reverse=True)
     onlyCont = ['username', 'score', 'time']
-    allUserNames = set([score['username'] for score in scores])
     idx = 1
     highScores = []
     for score in scores:
-        # only keep highest per user
-        # username = score['username']
-        # if username not in allUserNames:
-        #     continue
-        # else:
-        #     allUserNames.discard(username)
-        # only keep specified entires
         dropEntries = []
         for cont in score.keys():
             if cont not in onlyCont:
                 dropEntries.append(cont)
         for drop in dropEntries:
             score.pop(drop, None)
-
         score['rank'] = idx
         highScores.append(score)
         idx += 1
