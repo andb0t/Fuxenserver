@@ -44,22 +44,23 @@ def reset_db():
     create_db()
 
 
-def show_db():
-    print('ScoreData content:')
-    entries = app.ScoreData.query.all()
-    entryDicts = list(map(lambda x: x.as_dict(), entries))
-    dict_table(entryDicts)
-    print('DailyMessage content:')
-    entries = app.DailyMessage.query.all()
-    entryDicts = list(map(lambda x: x.as_dict(), entries))
-    dict_table(entryDicts)
-
-
 def get_table(table):
     if table == 'scores':
         return app.ScoreData
     elif table == 'messages':
         return app.DailyMessage
+
+
+def show_table(table):
+    print('Table', table, 'content:')
+    entries = get_table(table).query.all()
+    entryDicts = list(map(lambda x: x.as_dict(), entries))
+    dict_table(entryDicts)
+
+
+def show_db():
+    show_table('scores')
+    show_table('messages')
 
 
 def get_entry(ID, table):
@@ -190,6 +191,8 @@ for command in args.command:
         if key and val:
             if command == 'show':
                 show_filtered(args.table, key, val)
+    elif args.table:
+        show_table(args.table)
     elif args.msg:
         if command == 'news':
             post_news(args.msg, 'news')
