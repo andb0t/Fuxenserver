@@ -65,7 +65,7 @@ To submit new news messages or alerts to users, use this interface:
 ```shell
 heroku [local:]run python manage.py news --msg "My message for today"  # show this message as top news
 heroku [local:]run python manage.py alert --msg "Warning: tornado incoming"  # alert all users
-heroku [local:]run python manage.py release --msg "Download the new version!" --version "1.2"  # alert all users with software version lower than 1.2
+heroku [local:]run python manage.py release --msg "Download the new version!" --version "1.2"  # alert all users with older versions
 heroku [local:]run python manage.py show --filter category alert  --table messages  # show all active alerts
 heroku [local:]run python manage.py modify --ID 1 --change category inactive  --table messages  # inactivate an alert
 ```

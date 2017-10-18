@@ -191,7 +191,7 @@ for command in args.command:
         if key and val:
             if command == 'show':
                 show_filtered(args.table, key, val)
-    elif args.table:
+    elif args.table and command == 'show':
         show_table(args.table)
     elif args.msg:
         if command == 'news':
