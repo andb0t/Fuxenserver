@@ -52,6 +52,26 @@ class ScoreData(db.Model):
                 }
 
 
+class DailyMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(80))
+    time = db.Column(db.String(80))
+
+    def __init__(self, message, time):
+        self.message = message
+        self.time = time
+
+    def __repr__(self):
+        return '<Message %r>' % self.message
+
+    def as_dict(self):
+        return {
+                'id': self.id,
+                'message': self.message,
+                'time': self.time,
+                }
+
+
 # ==============================================================================
 # dummy api
 # ==============================================================================
@@ -61,6 +81,26 @@ def index():
     # return 'Hello from FLASK, my hostname is: %s \n' % (socket.gethostname())
 
 # http://localhost:5000/
+
+
+# ==============================================================================
+# daily message api
+# ==============================================================================
+@app.route('/messages', methods=['GET'])
+def get_messages():
+    entries = DailyMessage.query.all()
+    dailies = [e.as_dict() for e in entries]
+    dailies.reverse()
+    # entry = db.session.query(DailyMessage).order_by(DailyMessage.id.desc()).first()
+    # return flask.jsonify(entry)
+    return flask.jsonify(dailies)
+
+
+@app.route('/daily', methods=['GET'])
+def get_daily():
+    entry = db.session.query(DailyMessage).order_by(DailyMessage.id.desc()).first()
+    daily = entry.as_dict()
+    return flask.jsonify(daily)
 
 
 # ==============================================================================
