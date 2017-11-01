@@ -22,8 +22,7 @@ def read_entries(addr):
 
 def post_entry(addr, username, score, message):
     response = requests.post(addr,
-                             json={
-                                   'username': username,
+                             json={'username': username,
                                    'score': score,
                                    'message': message,
                                    }

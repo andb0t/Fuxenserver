@@ -42,8 +42,7 @@ class ScoreData(db.Model):
         return '<User %r>' % self.username
 
     def as_dict(self):
-        return {
-                'id': self.id,
+        return {'id': self.id,
                 'username': self.username,
                 'score': self.score,
                 'message': self.message,
@@ -69,8 +68,7 @@ class DailyMessage(db.Model):
         return '<Message %r>' % self.message
 
     def as_dict(self):
-        return {
-                'id': self.id,
+        return {'id': self.id,
                 'message': self.message,
                 'time': self.time,
                 'category': self.category,
